@@ -12,13 +12,17 @@ const instance = axios.create({
 
 export const api = {
 	getList() {
-		return instance.post('getList', {},{params:{limit:1000}})
+		return instance.post('getList', {}, {params: {limit: 1000}})
 			.then(res => {
-				console.log(res)
 				return res.data
 			})
 	},
-	getRecord(record,partnership_id){
-		return instance.post('getRecord',{},{params:{record,partnership_id}})
+	getRecord(record, partnership_id) {
+		return instance.post('getRecord', {}, {
+			params: {record, partnership_id},
+			responseType: 'blob'
+		}).then(res => {
+			return res.data
+		})
 	},
 }

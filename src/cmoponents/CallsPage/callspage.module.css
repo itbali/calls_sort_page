@@ -1,23 +1,77 @@
 .callsPage {
-    background: #E5E5E5;
+    background: #F1F4F9;
     display: flex;
     flex-direction: column;
     padding: 0 120px;
     width: 100%;
     }
 
-.filtersField {
-
+.balanceCalendar {
+    padding: 20px 0 30px;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
     }
 
-.balanceCalendar {
+.balance {
+    align-items: center;
+    background: #FFFFFF;
+    border-radius: 48px;
+    color: #899CB1;
     display: flex;
-    margin-left: auto;
+    font-weight: 500;
+    justify-content: center;
+    margin-right: 48px;
+    padding: 8px 10px;
+    }
+
+.balance span {
+    color: black;
+    font-weight: 400;
+    padding: 2px 10px 0 3px;
+    }
+
+.dateOpener {
+    cursor: pointer;
+    position: relative;
+    }
+.dataButton{
+    background-color: rgba(0,0,0,0);
+    }
+
+.dateChooser {
+    background: #FFFFFF;
+    border: 1px solid #EAF0FA;
+    border-radius: 4px;
+    box-shadow: 0 0 26px rgba(233, 237, 243, 0.8);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    z-index: 6;
+    }
+
+.dateChooser span {
+    padding: 6px 0 6px 20px;
+    }
+
+.dateChooser span:hover {
+    background: #c6d2e9;
+    color: #122945;
     }
 
 .searchFilters {
     display: flex;
     justify-content: space-between;
+    }
+.searchFilters input{
+    background-color: #E5E5E5;
+    border: none;
+    }
+.searchFilters img {
+    margin-left: 12px;
     }
 
 .tableResult {
@@ -26,7 +80,33 @@
     box-shadow: 0 4px 5px #E9EDF3;
     padding: 26px;
     }
-.tableHeader{
+
+.tableHeader {
     display: flex;
     justify-content: space-between;
+    text-align: right;
+    }
+.tableHeader .tabType {
+    width: 23px;
+    margin-right: 30px;
+    }
+.tableHeader .tabTime{
+    width: 41px;
+    margin-right: 8px;
+    }
+.tableHeader .tabEmployer{
+    margin-left: 40px;
+    width: 68px;
+    }
+.tableHeader .tabCall{
+    width: 254px;
+    margin-right: 72px;
+    }
+.tableHeader .tabSource{
+    width: 197px;
+    margin-right: 17px;
+    }
+.tableHeader .tabDurance{
+    width: 352px;
+    margin-right: 40px;
     }

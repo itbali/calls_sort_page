@@ -4,6 +4,7 @@ const initialState = {
 	error: null,
 	isInitialized: false,
 	callData:{},
+	currentCallRecord:null,
 }
 export const appReducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -13,22 +14,28 @@ export const appReducer = (state = initialState, action) => {
 			return {...state, callData: action.data}
 		case "APP/SET-ERROR":
 			return {...state, error: action.error}
+		case "APP/SET-CALL-RECORD":
+			return {...state, currentCallRecord: action.callRecord}
 		default:
 			return {...state}
 	}
 }
-export const setAppIsInitializedAC = (isInitialized) => ({
+ const setAppIsInitializedAC = (isInitialized) => ({
 	type: 'APP/SET-IS-INITIALIZED',
 	isInitialized
 })
-export const setResolveData = (data) => ({
+ const setResolveData = (data) => ({
 	type: 'APP/SET-RESOLVED-DATA',
 	data
 })
-export const setError = (err) => ({
+ const setError = (err) => ({
 	type: 'APP/SET-ERROR',
 	err
 })
+export const setCallRecord = (callRecord) =>({
+	type: 'APP/SET-CALL-RECORD',
+	callRecord
+ })
 
 export const initializeAppTC = () => (dispatch) => {
 	api.getList()
@@ -45,6 +52,6 @@ export const initializeAppTC = () => (dispatch) => {
 export const getRecordTC = (record,partnership_ip)=>(dispatch)=>{
 	api.getRecord(record,partnership_ip)
 		.then(res=>{
-
+			dispatch(setCallRecord(res))
 		})
 }

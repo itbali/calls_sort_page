@@ -3,6 +3,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {initializeAppTC} from "../../bll/reducer";
 import {SingleCall} from "../SingleCall/SingleCall";
 import {Button, DateRangePicker, Nav} from "rsuite";
+import plusBalanceIcon from '../../assets/button/balance/Vector.svg'
+import calendarIcon from '../../assets/icon-calendar.svg'
+import searchIcon from '../../assets/search.svg'
 import s from "./callspage.module.css"
 
 export const CallsPage = () => {
@@ -11,11 +14,9 @@ export const CallsPage = () => {
 
 	const [finalResult, setFinalResult] = useState([])
 	const [doubleDate, setDoubleDate] = useState([new Date(), new Date()])
-	const [filters, setFilters] = useState({
-		callType:'',
-		employer:'',
-	})
 
+	let employers = new Set();
+	//фильтр для сотрудников на будущее
 	const onDateChange = (dateFromPicker) => {
 		setDoubleDate(dateFromPicker)
 		if (dateFromPicker) {
@@ -46,17 +47,23 @@ export const CallsPage = () => {
 			setFinalResult(resData.results)
 		}
 	}, [])
-//сетаем данные для отрисовки в стейт если пришли данные с сервера
+// сетаем данные для отрисовки в стейт если пришли данные с сервера
 // (по факту это первая отрисовка всех звонков)
+// создаем уникальных пользователей
+
 	useEffect(() => {
 		setFinalResult(resData.results)
+		resData.results?.forEach(el => {
+			employers.add(`${el.person_name} ${el.person_surname}`)
+		})
+		console.log(employers)
 	}, [resData])
 
 //функция сортировки данных по дате
-	const selectCallDateHandler = (e) => {
-		console.log(e.target.value)
+	const selectCallDateHandler = (period) => {
+		console.log(period)
 		let nowDate = new Date();
-		switch (e.target.value) {
+		switch (period) {
 			case "3":
 				let dayThreeDaysBefore = new Date(new Date().setHours(nowDate.getHours() - 72));
 				return setFinalResult(resData.results.filter(el => (
@@ -84,26 +91,43 @@ export const CallsPage = () => {
 
 	return (
 		<div className={s.callsPage}>
-			<h1>
-				всего звонков:{finalResult?.length}
-			</h1>
-			<br/>
-			<div className={s.filtersField}>
+			<div>
 				<div className={s.balanceCalendar}>
-					<span>Баланс 252р</span>
-					<div>
-						<Button>
-							{"<<"}
-						</Button>
-						<span>date</span>
-						<Button>
-							{">>"}
-						</Button>
+					<span className={s.balance}>Баланс: <span> 252р </span><img src={plusBalanceIcon} alt=""/></span>
+					<div style={{display: "flex"}}>
+						<Button className={s.dataButton}>{"<"}</Button>
+						<Nav>
+							<Nav.Menu title={"дата"}
+									  noCaret
+									  icon={<img src={calendarIcon} alt=""/>}
+							>
+								<Nav.Item onSelect={() => selectCallDateHandler("3")}>3 дня</Nav.Item>
+								<Nav.Item onSelect={() => selectCallDateHandler("7")}>неделя</Nav.Item>
+								<Nav.Item onSelect={() => selectCallDateHandler("month")}>месяц</Nav.Item>
+								<Nav.Item onSelect={() => selectCallDateHandler("year")}>год</Nav.Item>
+								<Nav.Item>
+									<DateRangePicker
+										placeholder={"__.__.__-__.__.__"}
+										character={'-'}
+										placement={'auto'}
+										value={doubleDate}
+										onChange={onDateChange}
+										onClean={() => {
+											setFinalResult(resData.results)
+										}}
+									/>
+								</Nav.Item>
+							</Nav.Menu>
+						</Nav>
+						<Button className={s.dataButton}>{">"}</Button>
 					</div>
 				</div>
 				<div>
 					<Nav className={s.searchFilters}>
-						<input type="text" placeholder="Поиск по звонкам"/>
+						<div>
+							<img src={searchIcon} alt=""/>
+							<input type="text" placeholder="Поиск по звонкам"/>
+						</div>
 						<div>
 							<Nav.Item>сбросить фильтры</Nav.Item>
 							<Nav.Menu title="Звонки">
@@ -112,37 +136,18 @@ export const CallsPage = () => {
 								<Nav.Item eventKey="1" onSelect={selectCallTypeHandler}>Входящий</Nav.Item>
 							</Nav.Menu>
 						</div>
-						<div>
-							<select name="date" id="date" onChange={selectCallDateHandler} defaultValue={""}>
-								<option value="">за все время</option>
-								<option value="3">3 дня</option>
-								<option value="7">неделя</option>
-								<option value="month">месяц</option>
-								<option value="year">год</option>
-								<option value="doubleDate">по двум датам</option>
-							</select>
-							<DateRangePicker
-								placeholder={"__.__.__-__.__.__"}
-								character={'-'}
-								value={doubleDate}
-								onChange={onDateChange}
-								onClean={() => {
-									setFinalResult(resData.results)
-								}}
-							/>
-						</div>
 					</Nav>
 				</div>
 			</div>
 			<div className={s.tableResult}>
 				<section>
 					<div className={s.tableHeader}>
-						<div style={{width:"23px",marginRight:"30px"}}>ТИП</div>
-						<div style={{width:"41px",marginRight:"48px"}}>Время</div>
-						<div style={{width:"68px",marginRight:"60px"}}>Сотрудник</div>
-						<div style={{width:"254px",marginRight:"72px"}}>Звонок</div>
-						<div style={{width:"197px",marginRight:"17px"}}>Источник</div>
-						<div style={{width:"41px",marginRight:"48px"}}>Длительность</div>
+						<div className={s.tabType}>ТИП</div>
+						<div className={s.tabTime}>Время</div>
+						<div className={s.tabEmployer}>Сотрудник</div>
+						<div className={s.tabCall}>Звонок</div>
+						<div className={s.tabSource}>Источник</div>
+						<div className={s.tabDurance}>Длительность</div>
 					</div>
 				</section>
 				<section>
